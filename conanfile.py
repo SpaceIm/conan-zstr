@@ -11,14 +11,22 @@ class ZstrConan(ConanFile):
     topics = ("conan", "zstr", "zlib", "compression")
     homepage = "https://github.com/mateidavid/zstr"
     url = "https://github.com/conan-io/conan-center-index"
+    settings = "compiler"
     no_copy_source = True
 
     @property
     def _source_subfolder(self):
         return "source_subfolder"
 
+    def configure(self):
+        if self.settings.compiler.get_safe("cppstd"):
+            tools.check_min_cppstd(self, 11)
+
     def requirements(self):
         self.requires("zlib/1.2.11")
+
+    def package_id(self):
+        self.info.header_only()
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version],
